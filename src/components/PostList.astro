@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDate, postPath, tagPath } from "../lib/site";
+
+interface Props {
+  posts: CollectionEntry<"posts">[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length > 0 ? (
+    <ul class="post-list">
+      {posts.map((post) => (
+        <li class="post-item">
+          <div class="post-item__meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {import.meta.env.DEV && post.data.draft && (
+              <span class="draft-label">draft</span>
+            )}
+          </div>
+          <div class="post-item__content">
+            <h2>
+              <a href={postPath(post.id)}>{post.data.title}</a>
+            </h2>
+            <p>{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <ul class="tag-list" aria-label="Post tags">
+                {post.data.tags.map((tag) => (
+                  <li>
+                    <a class="tag" href={tagPath(tag)}>
+                      {tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="empty-state">
+      No posts here yet. Check back soon.
+    </p>
+  )
+}

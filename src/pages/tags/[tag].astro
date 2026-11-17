@@ -1,0 +1,30 @@
+---
+import { getPosts } from "../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostList from "../../components/PostList.astro";
+import { tagSlug } from "../../lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag: tagSlug(tag) },
+    props: {
+      tag,
+      posts: posts.filter((post) => post.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`Tag: ${tag}`} description={`Posts tagged “${tag}”.`}>
+  <section class="content-section">
+    <p class="eyebrow"><span aria-hidden="true">~/</span> tag</p>
+    <h1 class="page-title">{tag}</h1>
+    <p class="page-description">Posts filed under this topic.</p>
+    <PostList posts={posts} />
+  </section>
+</BaseLayout>

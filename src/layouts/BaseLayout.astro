@@ -1,0 +1,149 @@
+---
+import "../styles/global.css";
+import { SITE, sitePath } from "../lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  searchAssets?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  searchAssets = false,
+} = Astro.props;
+const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — by ${SITE.author}`;
+
+const basePath = import.meta.env.BASE_URL;
+const routePath = Astro.url.pathname;
+const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
+const canonicalPath = routePath.startsWith(normalizedBase)
+  ? routePath
+  : sitePath(routePath);
+const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111714" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href={sitePath("favicon.svg")} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.title} RSS feed`}
+      href={sitePath("rss.xml")}
+    />
+    <link rel="sitemap" href={sitePath("sitemap-index.xml")} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+
+    {
+      searchAssets && (
+        <>
+          <link
+            rel="stylesheet"
+            href={sitePath("pagefind/pagefind-component-ui.css")}
+          />
+          <script
+            type="module"
+            src={sitePath("pagefind/pagefind-component-ui.js")}
+          />
+        </>
+      )
+    }
+
+    <script is:inline>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem("stdout-theme");
+          document.documentElement.dataset.theme =
+            savedTheme === "light" ? "light" : "dark";
+        } catch {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href={sitePath("")} aria-label="stdout home">
+          <span class="brand__prompt" aria-hidden="true">&gt;</span>
+          <span class="brand__title">stdout</span>
+          <span class="brand__byline">— by Henry H.</span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href={sitePath("posts/")}>Archive</a>
+          <a href={sitePath("tags/")}>Tags</a>
+          <a href={sitePath("search/")}>Search</a>
+          <a href={sitePath("about/")}>About</a>
+          <a class="rss-link" href={sitePath("rss.xml")} aria-label="RSS feed">
+            RSS
+          </a>
+          <button
+            class="theme-toggle"
+            type="button"
+            data-theme-toggle
+            aria-label="Switch to light theme"
+            title="Switch theme"
+          >
+            <span aria-hidden="true" data-theme-icon>☼</span>
+          </button>
+        </nav>
+      </header>
+
+      <main id="main" class="main-content" data-pagefind-body>
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <p>
+          <span class="footer-prompt" aria-hidden="true">$</span>
+          <span>stdout</span>
+          <span class="footer-separator">·</span>
+          <span>by Henry H.</span>
+        </p>
+        <a href={sitePath("rss.xml")}>Subscribe via RSS</a>
+      </footer>
+    </div>
+
+    <script>
+      const themeButton = document.querySelector<HTMLButtonElement>(
+        "[data-theme-toggle]",
+      );
+      const themeIcon = document.querySelector<HTMLElement>("[data-theme-icon]");
+
+      function updateThemeButton() {
+        const isDark = document.documentElement.dataset.theme !== "light";
+        themeButton?.setAttribute(
+          "aria-label",
+          `Switch to ${isDark ? "light" : "dark"} theme`,
+        );
+        if (themeIcon) themeIcon.textContent = isDark ? "☼" : "☾";
+      }
+
+      updateThemeButton();
+      themeButton?.addEventListener("click", () => {
+        const nextTheme =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = nextTheme;
+        try {
+          localStorage.setItem("stdout-theme", nextTheme);
+        } catch {
+          // The theme still works for this page if storage is unavailable.
+        }
+        updateThemeButton();
+      });
+    </script>
+  </body>
+</html>

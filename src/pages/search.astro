@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Search"
+  description="Search posts and pages on stdout."
+  searchAssets={true}
+>
+  <section class="content-section search-page">
+    <p class="eyebrow"><span aria-hidden="true">~/</span> find</p>
+    <h1 class="page-title">Search</h1>
+    <p class="page-description">Find something you remember reading.</p>
+
+    <pagefind-config
+      bundle-path="/stdout/pagefind/"
+      base-url="/stdout/"
+    ></pagefind-config>
+    <div class="search-interface">
+      <pagefind-input placeholder="Search the site…"></pagefind-input>
+      <pagefind-summary default-message="Search across posts and pages."></pagefind-summary>
+      <pagefind-results></pagefind-results>
+    </div>
+    <noscript>
+      <p class="empty-state">Search needs JavaScript. You can browse the <a href="/stdout/posts/">post archive</a> instead.</p>
+    </noscript>
+  </section>
+</BaseLayout>

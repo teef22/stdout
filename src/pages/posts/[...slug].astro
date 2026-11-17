@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { readingTime } from "../../lib/posts";
+import { formatDate, tagPath } from "../../lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => {
+    return import.meta.env.DEV || !data.draft;
+  });
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const timeToRead = readingTime(post.body);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="article">
+    <header class="article-header">
+      <a class="back-link" href="/stdout/posts/">← All posts</a>
+      <p class="eyebrow"><span aria-hidden="true">~/</span> writing</p>
+      <h1>{post.data.title}</h1>
+      <p class="article-description">{post.data.description}</p>
+      <div class="article-meta">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate)}
+        </time>
+        <span aria-hidden="true">·</span>
+        <span>{timeToRead}</span>
+        {
+          import.meta.env.DEV && post.data.draft && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span class="draft-label">draft preview</span>
+            </>
+          )
+        }
+      </div>
+      {
+        post.data.tags.length > 0 && (
+          <ul class="tag-list article-tags" aria-label="Post tags">
+            {post.data.tags.map((tag) => (
+              <li>
+                <a class="tag" href={tagPath(tag)}>
+                  {tag}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="prose article-content">
+      <Content />
+    </div>
+
+    <footer class="article-footer">
+      <a class="text-link" href="/stdout/posts/">← Back to all posts</a>
+    </footer>
+  </article>
+</BaseLayout>
