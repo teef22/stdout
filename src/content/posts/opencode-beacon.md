@@ -16,6 +16,8 @@ shows one digest covering every stable release you missed.
 It is a TUI plugin, not a separate app. The digest appears in a scrollable
 dialog, and everything else is driven by a slash command.
 
+*A quick disclosure: Beacon was built with AI-assisted coding.*
+
 ## What it does
 
 On the first launch after a newer stable release, Beacon compares the running
