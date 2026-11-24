@@ -5,11 +5,10 @@ import PostList from "../components/PostList.astro";
 import { getPosts } from "../lib/posts";
 
 const posts = await getPosts();
-const recentPosts = posts.slice(0, 5);
 ---
 
 <BaseLayout>
   <PageHeading text="hello" />
 
-  <PostList posts={recentPosts} />
+  <PostList posts={posts} />
 </BaseLayout>

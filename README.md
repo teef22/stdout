@@ -17,7 +17,7 @@ Add a Markdown file in `src/content/posts/`:
 ```md
 ---
 title: A post title
-description: A short summary for the archive and search results.
+description: A short summary for the home page and search results.
 pubDate: 2026-11-19
 tags:
   - notes

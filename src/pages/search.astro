@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeading from "../components/PageHeading.astro";
+import { sitePath } from "../lib/site";
 ---
 
 <BaseLayout
@@ -23,7 +24,7 @@ import PageHeading from "../components/PageHeading.astro";
       <pagefind-results></pagefind-results>
     </div>
     <noscript>
-      <p class="empty-state">Search needs JavaScript. You can browse the <a href="/stdout/posts/">post archive</a> instead.</p>
+      <p class="empty-state">Search needs JavaScript. You can browse <a href={sitePath("")}>all posts</a> instead.</p>
     </noscript>
   </section>
 </BaseLayout>
