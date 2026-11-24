@@ -3,7 +3,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import PostList from "../components/PostList.astro";
 import { getPosts } from "../lib/posts";
-import { sitePath } from "../lib/site";
 
 const posts = await getPosts();
 const recentPosts = posts.slice(0, 5);
@@ -12,11 +11,5 @@ const recentPosts = posts.slice(0, 5);
 <BaseLayout>
   <PageHeading text="hello" />
 
-  <section class="content-section" aria-labelledby="recent-heading">
-    <div class="section-heading">
-      <h2 id="recent-heading">Recent posts</h2>
-      <a class="text-link" href={sitePath("posts/")}>View archive <span aria-hidden="true">→</span></a>
-    </div>
-    <PostList posts={recentPosts} />
-  </section>
+  <PostList posts={recentPosts} />
 </BaseLayout>
