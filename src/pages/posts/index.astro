@@ -10,7 +10,6 @@ const posts = await getPosts();
 <BaseLayout title="Archive" description="All posts published on stdout.">
   <section class="content-section">
     <PageHeading text="archive" />
-    <p class="page-description">A chronological list of notes and writing.</p>
     <PostList posts={posts} />
   </section>
 </BaseLayout>

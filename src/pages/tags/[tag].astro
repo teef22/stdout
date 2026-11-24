@@ -24,7 +24,6 @@ const { tag, posts } = Astro.props;
 <BaseLayout title={`Tag: ${tag}`} description={`Posts tagged “${tag}”.`}>
   <section class="content-section">
     <PageHeading text={`tags/${tag}`} />
-    <p class="page-description">Posts filed under this topic.</p>
     <PostList posts={posts} />
   </section>
 </BaseLayout>
