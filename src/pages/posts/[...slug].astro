@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeading from "../../components/PageHeading.astro";
 import { readingTime } from "../../lib/posts";
 import { formatDate, tagPath } from "../../lib/site";
 
@@ -23,8 +24,10 @@ const timeToRead = readingTime(post.body);
 <BaseLayout title={post.data.title} description={post.data.description}>
   <article class="article">
     <header class="article-header">
-      <a class="back-link" href="/stdout/posts/">← All posts</a>
-      <p class="eyebrow"><span aria-hidden="true">~/</span> writing</p>
+      <div class="article-heading-row">
+        <PageHeading text="writing" as="p" />
+        <a class="back-link" href="/stdout/posts/">← All posts</a>
+      </div>
       <h1>{post.data.title}</h1>
       <p class="article-description">{post.data.description}</p>
       <div class="article-meta">

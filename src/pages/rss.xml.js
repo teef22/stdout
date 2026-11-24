@@ -6,7 +6,7 @@ export async function GET(context) {
   const posts = await getPosts();
 
   return rss({
-    title: `${SITE.title} — by ${SITE.author}`,
+    title: SITE.title,
     description: SITE.description,
     site: new URL(import.meta.env.BASE_URL, context.site).toString(),
     items: posts

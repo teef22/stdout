@@ -167,11 +167,6 @@ pagefind-input:focus-visible {
   letter-spacing: -0.06em;
 }
 
-.brand__byline {
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
 .site-nav {
   display: flex;
   align-items: center;
@@ -182,7 +177,7 @@ pagefind-input:focus-visible {
 
 .site-nav a {
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 1rem;
   text-decoration: none;
 }
 
@@ -194,7 +189,7 @@ pagefind-input:focus-visible {
 .site-nav .rss-link {
   color: var(--accent);
   font-family: "DM Mono", monospace;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
 }
 
 .theme-toggle {
@@ -220,31 +215,34 @@ pagefind-input:focus-visible {
   padding-block: clamp(3rem, 8vw, 6.5rem);
 }
 
+.page {
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
 .home-intro {
-  max-width: 650px;
   margin-bottom: clamp(4rem, 10vw, 7rem);
 }
 
-.eyebrow {
-  margin: 0 0 0.8rem;
-  color: var(--accent);
+.page-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.38em;
+  margin: 0;
+  color: var(--text);
   font-family: "DM Mono", monospace;
-  font-size: 0.78rem;
-  letter-spacing: 0.025em;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 1.15;
 }
 
-.home-intro h1,
-.not-found h1 {
-  max-width: 13ch;
-  margin: 0;
-  font-size: clamp(2.3rem, 6vw, 4rem);
-  font-weight: 500;
-  letter-spacing: -0.065em;
-  line-height: 1.08;
+.page-heading__prompt {
+  color: var(--accent);
 }
 
 .intro-copy {
-  max-width: 54ch;
   margin: 1.35rem 0 0;
   color: var(--muted);
   font-size: clamp(1.05rem, 2vw, 1.2rem);
@@ -360,21 +358,9 @@ pagefind-input:focus-visible {
   text-transform: uppercase;
 }
 
-.page-title {
-  margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 1.1;
-}
-
 .page-description {
   margin: 0.8rem 0 2.5rem;
   color: var(--muted);
-}
-
-.page-prose {
-  max-width: 680px;
 }
 
 .prose {
@@ -458,20 +444,23 @@ pagefind-input:focus-visible {
   border-radius: 8px;
 }
 
-.article {
-  max-width: 720px;
-  margin-inline: auto;
-}
-
 .article-header {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--border);
 }
 
+.article-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
 .back-link {
   display: inline-block;
-  margin-bottom: 2rem;
+  margin: 0;
   color: var(--muted);
   font-size: 0.85rem;
   text-decoration: none;
@@ -490,7 +479,6 @@ pagefind-input:focus-visible {
 }
 
 .article-description {
-  max-width: 60ch;
   margin: 1rem 0;
   color: var(--muted);
   font-size: 1.1rem;
@@ -543,10 +531,6 @@ pagefind-input:focus-visible {
   font-size: 0.75rem;
 }
 
-.search-page {
-  max-width: 760px;
-}
-
 .search-interface {
   margin-top: 2rem;
 }
@@ -569,12 +553,7 @@ pagefind-results {
   display: block;
 }
 
-.not-found {
-  max-width: 560px;
-  margin: 3rem auto;
-}
-
-.not-found > p:not(.eyebrow) {
+.not-found > p {
   margin-block: 1rem 1.5rem;
   color: var(--muted);
 }
@@ -587,17 +566,13 @@ pagefind-results {
   padding-block: 1.4rem;
   border-top: 1px solid var(--border);
   color: var(--subtle);
-  font-size: 0.8rem;
+  font-size: 0.95rem;
 }
 
 .site-footer p {
   display: flex;
   gap: 0.45rem;
   margin: 0;
-}
-
-.footer-separator {
-  color: var(--border);
 }
 
 .site-footer a {
@@ -660,10 +635,6 @@ pagefind-results {
 }
 
 @media (max-width: 440px) {
-  .brand__byline {
-    font-size: 0.75rem;
-  }
-
   .section-heading {
     align-items: flex-start;
     flex-direction: column;

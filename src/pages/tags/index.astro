@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeading from "../../components/PageHeading.astro";
 import { getPosts } from "../../lib/posts";
 import { tagPath, tagSlug } from "../../lib/site";
 
@@ -15,8 +16,7 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))]
 
 <BaseLayout title="Tags" description="Browse posts by topic.">
   <section class="content-section">
-    <p class="eyebrow"><span aria-hidden="true">~/</span> index</p>
-    <h1 class="page-title">Tags</h1>
+    <PageHeading text="tags" />
     <p class="page-description">Browse posts by topic.</p>
     {
       tags.length > 0 ? (

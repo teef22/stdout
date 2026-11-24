@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeading from "../../components/PageHeading.astro";
 import PostList from "../../components/PostList.astro";
 import { getPosts } from "../../lib/posts";
 
@@ -8,8 +9,7 @@ const posts = await getPosts();
 
 <BaseLayout title="Archive" description="All posts published on stdout.">
   <section class="content-section">
-    <p class="eyebrow"><span aria-hidden="true">~/</span> archive</p>
-    <h1 class="page-title">All posts</h1>
+    <PageHeading text="archive" />
     <p class="page-description">A chronological list of notes and writing.</p>
     <PostList posts={posts} />
   </section>

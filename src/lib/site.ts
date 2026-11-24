@@ -1,8 +1,7 @@
 export const SITE = {
   title: "stdout",
-  author: "Henry H.",
   origin: "https://teef22.github.io",
-  description: "A personal blog by Henry H.",
+  description: "A blog for notes, thoughts, and things worth keeping.",
 };
 
 export function sitePath(path = "") {

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeading from "../components/PageHeading.astro";
 import PostList from "../components/PostList.astro";
 import { getPosts } from "../lib/posts";
 import { sitePath } from "../lib/site";
@@ -10,11 +11,9 @@ const recentPosts = posts.slice(0, 5);
 
 <BaseLayout>
   <section class="home-intro">
-    <p class="eyebrow"><span aria-hidden="true">~/</span> hello</p>
-    <h1>A little corner of the internet.</h1>
+    <PageHeading text="hello" />
     <p class="intro-copy">
-      Hi, I’m Henry. This is a place for notes, thoughts, and whatever else
-      catches my attention.
+      A place for notes, thoughts, and whatever else is worth sharing.
     </p>
   </section>
 

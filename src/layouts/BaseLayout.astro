@@ -13,7 +13,7 @@ const {
   description = SITE.description,
   searchAssets = false,
 } = Astro.props;
-const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — by ${SITE.author}`;
+const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
 
 const basePath = import.meta.env.BASE_URL;
 const routePath = Astro.url.pathname;
@@ -25,12 +25,12 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#111714" />
+    <meta name="theme-color" content="#f7f8f4" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -66,9 +66,9 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
         try {
           const savedTheme = localStorage.getItem("stdout-theme");
           document.documentElement.dataset.theme =
-            savedTheme === "light" ? "light" : "dark";
+            savedTheme === "dark" ? "dark" : "light";
         } catch {
-          document.documentElement.dataset.theme = "dark";
+          document.documentElement.dataset.theme = "light";
         }
       })();
     </script>
@@ -80,7 +80,6 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
         <a class="brand" href={sitePath("")} aria-label="stdout home">
           <span class="brand__prompt" aria-hidden="true">&gt;</span>
           <span class="brand__title">stdout</span>
-          <span class="brand__byline">— by Henry H.</span>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
           <a href={sitePath("posts/")}>Archive</a>
@@ -94,24 +93,24 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
             class="theme-toggle"
             type="button"
             data-theme-toggle
-            aria-label="Switch to light theme"
+            aria-label="Switch to dark theme"
             title="Switch theme"
           >
-            <span aria-hidden="true" data-theme-icon>☼</span>
+            <span aria-hidden="true" data-theme-icon>☾</span>
           </button>
         </nav>
       </header>
 
       <main id="main" class="main-content" data-pagefind-body>
-        <slot />
+        <div class="page">
+          <slot />
+        </div>
       </main>
 
       <footer class="site-footer">
         <p>
           <span class="footer-prompt" aria-hidden="true">$</span>
           <span>stdout</span>
-          <span class="footer-separator">·</span>
-          <span>by Henry H.</span>
         </p>
         <a href={sitePath("rss.xml")}>Subscribe via RSS</a>
       </footer>

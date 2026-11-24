@@ -1,18 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeading from "../components/PageHeading.astro";
 ---
 
 <BaseLayout
   title="About"
-  description="About Henry H. and the stdout blog."
+  description="About the stdout blog."
 >
-  <article class="prose page-prose">
-    <p class="eyebrow"><span aria-hidden="true">~/</span> about</p>
-    <h1>About</h1>
+  <article class="prose">
+    <PageHeading text="about" />
     <p>
-      I’m Henry H. This is my corner of the internet for notes, thoughts, and
-      whatever catches my attention. The topics may change; that’s part of the
-      point.
+      This is a corner of the internet for notes, thoughts, and whatever catches
+      my attention. The topics may change; that’s part of the point.
     </p>
     <p>
       I write here at my own pace. You can follow new posts through the <a href="/stdout/rss.xml">RSS feed</a>.

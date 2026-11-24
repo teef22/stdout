@@ -1,0 +1,13 @@
+---
+interface Props {
+  text: string;
+  as?: "h1" | "p";
+}
+
+const { text, as: Tag = "h1" } = Astro.props;
+---
+
+<Tag class="page-heading">
+  <span class="page-heading__prompt" aria-hidden="true">~/</span>
+  <span>{text}</span>
+</Tag>
