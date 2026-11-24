@@ -528,18 +528,18 @@ pagefind-input:focus-visible {
   content: "$";
   position: absolute;
   top: 50%;
-  left: 1rem;
+  left: 0.85rem;
   z-index: 1;
   transform: translateY(-50%);
   color: var(--search-prompt);
   font-family: "DM Mono", monospace;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1;
   pointer-events: none;
 }
 
 .search-terminal pagefind-input {
-  --pf-input-height: 54px;
+  --pf-input-height: 48px;
   --pf-input-font-size: 1rem;
   --pf-font: "DM Mono", monospace;
   --pf-background: transparent;
@@ -558,8 +558,13 @@ pagefind-input:focus-visible {
   display: none !important;
 }
 
-.search-interface a:hover {
-  color: var(--accent) !important;
+.search-terminal .pf-input {
+  padding-inline: 28px 14px !important;
+}
+
+.search-interface .pf-result-link:hover,
+.search-interface .pf-heading-link:hover {
+  text-decoration: none !important;
 }
 
 pagefind-summary {
