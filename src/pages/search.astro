@@ -16,8 +16,10 @@ import PageHeading from "../components/PageHeading.astro";
       base-url="/stdout/"
     ></pagefind-config>
     <div class="search-interface">
-      <pagefind-input placeholder="Search the site…"></pagefind-input>
-      <pagefind-summary default-message="Search across posts and pages."></pagefind-summary>
+      <div class="search-terminal">
+        <pagefind-input placeholder="Search the site…"></pagefind-input>
+      </div>
+      <pagefind-summary></pagefind-summary>
       <pagefind-results></pagefind-results>
     </div>
     <noscript>

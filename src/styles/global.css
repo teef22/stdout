@@ -29,6 +29,12 @@
   --pf-font: "DM Sans", sans-serif;
   --pf-border-radius: 8px;
   --pf-modal-backdrop: rgb(0 0 0 / 70%);
+  --search-bg: #0b100d;
+  --search-text: #e7eee9;
+  --search-muted: #849188;
+  --search-border: #2a372e;
+  --search-prompt: #a5ddb3;
+  --search-glow: rgb(165 221 179 / 14%);
 }
 
 :root[data-theme="light"] {
@@ -57,6 +63,12 @@
   --pf-scroll-shadow: rgb(0 0 0 / 8%);
   --pf-outline-focus: #287143;
   --pf-modal-backdrop: rgb(22 34 25 / 45%);
+  --search-bg: #121a15;
+  --search-text: #edf4ef;
+  --search-muted: #9bafa2;
+  --search-border: #2f4036;
+  --search-prompt: #9fe0ae;
+  --search-glow: rgb(40 113 67 / 15%);
 }
 
 * {
@@ -527,10 +539,49 @@ pagefind-input:focus-visible {
   margin-top: 0;
 }
 
-pagefind-input {
-  --pf-input-height: 48px;
+.search-terminal {
+  position: relative;
+  border: 1px solid var(--search-border);
+  border-radius: 4px;
+  background: var(--search-bg);
+  box-shadow: inset 0 0 18px rgb(0 0 0 / 22%);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.search-terminal:focus-within {
+  border-color: var(--search-prompt);
+  box-shadow:
+    0 0 0 1px var(--search-prompt),
+    0 0 24px var(--search-glow);
+}
+
+.search-terminal::before {
+  content: "$";
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  z-index: 1;
+  transform: translateY(-50%);
+  color: var(--search-prompt);
+  font-family: "DM Mono", monospace;
+  font-size: 0.95rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.search-terminal pagefind-input {
+  --pf-input-height: 54px;
   --pf-input-font-size: 1rem;
-  --pf-font: "DM Sans", sans-serif;
+  --pf-font: "DM Mono", monospace;
+  --pf-background: transparent;
+  --pf-text: var(--search-text);
+  --pf-text-muted: var(--search-muted);
+  --pf-border: transparent;
+  --pf-border-focus: transparent;
+  --pf-outline-focus: transparent;
+  --pf-outline-width: 0px;
+  --pf-border-radius: 0;
+  --pf-icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3C/svg%3E");
   display: block;
 }
 
@@ -538,7 +589,8 @@ pagefind-summary {
   display: block;
   margin-block: 1rem;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.8rem;
 }
 
 pagefind-results {
