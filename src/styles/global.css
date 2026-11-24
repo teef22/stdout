@@ -475,7 +475,7 @@ pagefind-input:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 7px;
   color: var(--text);
