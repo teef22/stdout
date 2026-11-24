@@ -544,6 +544,10 @@ pagefind-input:focus-visible {
   display: block;
 }
 
+.search-terminal .pf-input-clear {
+  display: none !important;
+}
+
 pagefind-summary {
   display: block;
   margin-block: 1rem;
