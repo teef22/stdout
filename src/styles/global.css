@@ -151,7 +151,7 @@ pagefind-input:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding-block: 1.55rem;
+  padding-block: 1rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -241,7 +241,7 @@ pagefind-input:focus-visible {
   margin: 0 0 2rem;
   color: var(--text);
   font-family: "DM Mono", monospace;
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-size: clamp(1.45rem, 3.5vw, 1.9rem);
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 1.15;
@@ -437,42 +437,20 @@ pagefind-input:focus-visible {
   border-bottom: 1px solid var(--border);
 }
 
-.article-heading-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
-}
-
-.article-heading-row .page-heading {
-  margin-bottom: 0;
-}
-
-.back-link {
-  display: inline-block;
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.85rem;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  color: var(--accent);
+.article-header .page-heading {
+  margin-bottom: 1rem;
 }
 
 .article-header h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
   font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 1.1;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
 }
 
-.article-description {
-  margin: 1rem 0;
-  color: var(--muted);
-  font-size: 1.1rem;
+.article-header h1 + .article-meta {
+  margin-top: 0.9rem;
 }
 
 .article-tags {
@@ -481,12 +459,6 @@ pagefind-input:focus-visible {
 
 .article-content {
   min-height: 8rem;
-}
-
-.article-footer {
-  margin-top: 3rem;
-  padding-top: 1.3rem;
-  border-top: 1px solid var(--border);
 }
 
 .tag-directory {
@@ -608,7 +580,7 @@ pagefind-results {
     align-items: flex-start;
     flex-direction: column;
     gap: 1rem;
-    padding-block: 1.2rem;
+    padding-block: 0.9rem;
   }
 
   .site-nav {
