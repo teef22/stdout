@@ -1,14 +1,19 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHeading from "../../components/PageHeading.astro";
-import { readingTime } from "../../lib/posts";
-import { formatDate, tagPath } from "../../lib/site";
+import TagList from "../../components/TagList.astro";
+import { getPosts, readingTime, type Post } from "../../lib/posts";
+import {
+  SITE,
+  absoluteUrl,
+  formatDate,
+  postPath,
+  sitePath,
+} from "../../lib/site";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts", ({ data }) => {
-    return import.meta.env.DEV || !data.draft;
-  });
+  const posts = await getPosts();
 
   return posts.map((post) => ({
     params: { slug: post.id },
@@ -16,20 +21,67 @@ export async function getStaticPaths() {
   }));
 }
 
+interface Props {
+  post: Post;
+}
+
 const { post } = Astro.props;
 const { Content } = await render(post);
-const timeToRead = readingTime(post.body);
+const timeToRead = readingTime(post.body ?? "");
+const siteUrl = Astro.site ?? new URL(import.meta.env.SITE);
+const articleUrl = absoluteUrl(postPath(post.id), siteUrl);
+
+const postJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate
+    ? { dateModified: post.data.updatedDate.toISOString() }
+    : {}),
+  author: {
+    "@type": "Person",
+    name: SITE.author,
+  },
+  url: articleUrl,
+  mainEntityOfPage: articleUrl,
+  inLanguage: SITE.language,
+  keywords: post.data.tags.join(", "),
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.title,
+    url: absoluteUrl(sitePath(""), siteUrl),
+  },
+};
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  indexable
+  ogType="article"
+  publishedTime={post.data.pubDate}
+  updatedTime={post.data.updatedDate}
+  tags={post.data.tags}
+  structuredData={postJsonLd}
+>
   <article class="article">
     <header class="article-header">
       <PageHeading text="writing" as="p" />
-      <h1>{post.data.title}</h1>
-      <div class="article-meta">
+      <h1 data-pagefind-meta="title" data-pagefind-ignore>{post.data.title}</h1>
+      <div class="article-meta" data-pagefind-ignore>
         <time datetime={post.data.pubDate.toISOString()}>
           {formatDate(post.data.pubDate)}
         </time>
+        {
+          post.data.updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>updated {formatDate(post.data.updatedDate)}</span>
+            </>
+          )
+        }
         <span aria-hidden="true">·</span>
         <span>{timeToRead}</span>
         {
@@ -41,19 +93,11 @@ const timeToRead = readingTime(post.body);
           )
         }
       </div>
-      {
-        post.data.tags.length > 0 && (
-          <ul class="tag-list article-tags" aria-label="Post tags">
-            {post.data.tags.map((tag) => (
-              <li>
-                <a class="tag" href={tagPath(tag)}>
-                  {tag}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )
-      }
+      <TagList
+        tags={post.data.tags}
+        class="article-tags"
+        pagefindIgnore
+      />
     </header>
 
     <div class="prose article-content">

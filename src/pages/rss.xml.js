@@ -3,20 +3,19 @@ import { getPosts } from "../lib/posts";
 import { SITE, postPath } from "../lib/site";
 
 export async function GET(context) {
-  const posts = await getPosts();
+  const posts = await getPosts({ includeDrafts: false });
 
   return rss({
     title: SITE.title,
     description: SITE.description,
     site: new URL(import.meta.env.BASE_URL, context.site).toString(),
-    items: posts
-      .filter((post) => !post.data.draft)
-      .map((post) => ({
-        title: post.data.title,
-        description: post.data.description,
-        pubDate: post.data.pubDate,
-        link: postPath(post.id),
-      })),
-    customData: "<language>en-us</language>",
+    items: posts.map((post) => ({
+      title: post.data.title,
+      description: post.data.description,
+      pubDate: post.data.pubDate,
+      link: postPath(post.id),
+      categories: post.data.tags,
+    })),
+    customData: `<language>${SITE.language}</language>`,
   });
 }

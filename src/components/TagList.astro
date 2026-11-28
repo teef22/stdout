@@ -1,0 +1,29 @@
+---
+import { tagPath } from "../lib/site";
+
+interface Props {
+  tags: string[];
+  class?: string;
+  pagefindIgnore?: boolean;
+}
+
+const { tags, class: className, pagefindIgnore = false } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul
+      class:list={["tag-list", className]}
+      aria-label="Post tags"
+      data-pagefind-ignore={pagefindIgnore ? "all" : undefined}
+    >
+      {tags.map((tag) => (
+        <li>
+          <a class="tag" href={tagPath(tag)}>
+            {tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

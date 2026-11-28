@@ -1,39 +1,114 @@
 ---
+import "@fontsource/dm-sans/400.css";
+import "@fontsource/dm-sans/500.css";
+import "@fontsource/dm-sans/600.css";
+import "@fontsource/dm-sans/700.css";
+import "@fontsource/dm-mono/400.css";
+import "@fontsource/dm-mono/500.css";
 import "../styles/global.css";
-import { SITE, sitePath } from "../lib/site";
+import { SITE, jsonLd, sitePath } from "../lib/site";
 
 interface Props {
   title?: string;
   description?: string;
   searchAssets?: boolean;
+  indexable?: boolean;
+  noindex?: boolean;
+  ogType?: "website" | "article";
+  publishedTime?: Date;
+  updatedTime?: Date;
+  tags?: string[];
+  structuredData?: unknown;
 }
 
 const {
   title,
   description = SITE.description,
   searchAssets = false,
+  indexable = false,
+  noindex = false,
+  ogType = "website",
+  publishedTime,
+  updatedTime,
+  tags = [],
+  structuredData,
 } = Astro.props;
+
 const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
 
+const siteUrl = Astro.site ?? new URL(import.meta.env.SITE);
 const basePath = import.meta.env.BASE_URL;
 const routePath = Astro.url.pathname;
 const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
-const canonicalPath = routePath.startsWith(normalizedBase)
-  ? routePath
-  : sitePath(routePath);
-const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
+const baseWithoutSlash = normalizedBase.slice(0, -1);
+const pathWithBase =
+  routePath === baseWithoutSlash || routePath.startsWith(normalizedBase)
+    ? routePath
+    : sitePath(routePath);
+const canonicalPath =
+  pathWithBase === baseWithoutSlash ? normalizedBase : pathWithBase;
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const relativePath = canonicalPath.startsWith(normalizedBase)
+  ? canonicalPath.slice(normalizedBase.length)
+  : canonicalPath.replace(/^\/+/, "");
+const section = relativePath.split("/")[0] ?? "";
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.title,
+  url: new URL(sitePath(""), siteUrl).toString(),
+  description: SITE.description,
+  inLanguage: SITE.language,
+  author: {
+    "@type": "Person",
+    name: SITE.author,
+  },
+};
 ---
 
 <!doctype html>
-<html lang="en" data-theme="light">
+<html
+  lang={SITE.language}
+  data-theme="light"
+  data-theme-light={SITE.themeColor.light}
+  data-theme-dark={SITE.themeColor.dark}
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f7f8f4" />
-    <meta property="og:type" content="website" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta
+      name="theme-color"
+      content={SITE.themeColor.light}
+      data-theme-color
+    />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {
+      publishedTime && (
+        <meta
+          property="article:published_time"
+          content={publishedTime.toISOString()}
+        />
+      )
+    }
+    {
+      updatedTime && (
+        <meta
+          property="article:modified_time"
+          content={updatedTime.toISOString()}
+        />
+      )
+    }
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href={sitePath("favicon.svg")} />
     <link
@@ -63,28 +138,73 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
 
     <script is:inline>
       (() => {
+        const root = document.documentElement;
+        const meta = document.querySelector('meta[name="theme-color"]');
+        const colors = {
+          light: root.dataset.themeLight || "#f7f8f4",
+          dark: root.dataset.themeDark || "#101512",
+        };
+        const systemDark = window.matchMedia?.(
+          "(prefers-color-scheme: dark)",
+        );
+        let theme = systemDark?.matches ? "dark" : "light";
+
         try {
           const savedTheme = localStorage.getItem("stdout-theme");
-          document.documentElement.dataset.theme =
-            savedTheme === "dark" ? "dark" : "light";
+          if (savedTheme === "light" || savedTheme === "dark") {
+            theme = savedTheme;
+          }
         } catch {
-          document.documentElement.dataset.theme = "light";
+          // Fall back to the system preference if storage is unavailable.
         }
+
+        root.dataset.theme = theme;
+        if (meta) meta.setAttribute("content", colors[theme]);
       })();
     </script>
+
+    <script type="application/ld+json" set:html={jsonLd(websiteJsonLd)} />
+    {
+      structuredData ? (
+        <script
+          type="application/ld+json"
+          set:html={jsonLd(structuredData)}
+        />
+      ) : null
+    }
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="site-shell">
       <header class="site-header">
-        <a class="brand" href={sitePath("")} aria-label="stdout home">
+        <a
+          class="brand"
+          href={sitePath("")}
+          aria-label={`${SITE.title} home`}
+          aria-current={section === "" ? "page" : undefined}
+        >
           <span class="brand__prompt" aria-hidden="true">&gt;</span>
-          <span class="brand__title">stdout</span>
+          <span class="brand__title">{SITE.title}</span>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
-          <a href={sitePath("tags/")}>tags</a>
-          <a href={sitePath("search/")}>search</a>
-          <a href={sitePath("about/")}>about</a>
+          <a
+            href={sitePath("tags/")}
+            aria-current={section === "tags" ? "page" : undefined}
+          >
+            tags
+          </a>
+          <a
+            href={sitePath("search/")}
+            aria-current={section === "search" ? "page" : undefined}
+          >
+            search
+          </a>
+          <a
+            href={sitePath("about/")}
+            aria-current={section === "about" ? "page" : undefined}
+          >
+            about
+          </a>
           <a class="rss-link" href={sitePath("rss.xml")} aria-label="RSS feed">
             rss
           </a>
@@ -100,7 +220,12 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
         </nav>
       </header>
 
-      <main id="main" class="main-content" data-pagefind-body>
+      <main
+        id="main"
+        class="main-content"
+        tabindex="-1"
+        data-pagefind-body={indexable ? "" : undefined}
+      >
         <div class="page">
           <slot />
         </div>
@@ -108,31 +233,51 @@ const canonicalUrl = new URL(canonicalPath, SITE.origin).toString();
     </div>
 
     <script>
+      const root = document.documentElement;
       const themeButton = document.querySelector<HTMLButtonElement>(
         "[data-theme-toggle]",
       );
       const themeIcon = document.querySelector<HTMLElement>("[data-theme-icon]");
+      const themeColor = document.querySelector<HTMLMetaElement>(
+        "[data-theme-color]",
+      );
+      const storageKey = "stdout-theme";
+      const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)");
+      const themeColors = {
+        light: root.dataset.themeLight || "#f7f8f4",
+        dark: root.dataset.themeDark || "#101512",
+      };
 
-      function updateThemeButton() {
-        const isDark = document.documentElement.dataset.theme !== "light";
+      function applyTheme(theme: "light" | "dark", persist: boolean) {
+        root.dataset.theme = theme;
+        themeColor?.setAttribute("content", themeColors[theme]);
         themeButton?.setAttribute(
           "aria-label",
-          `Switch to ${isDark ? "light" : "dark"} theme`,
+          `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
         );
-        if (themeIcon) themeIcon.textContent = isDark ? "☼" : "☾";
-      }
-
-      updateThemeButton();
-      themeButton?.addEventListener("click", () => {
-        const nextTheme =
-          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-        document.documentElement.dataset.theme = nextTheme;
+        if (themeIcon) themeIcon.textContent = theme === "dark" ? "☼" : "☾";
+        if (!persist) return;
         try {
-          localStorage.setItem("stdout-theme", nextTheme);
+          localStorage.setItem(storageKey, theme);
         } catch {
           // The theme still works for this page if storage is unavailable.
         }
-        updateThemeButton();
+      }
+
+      applyTheme(root.dataset.theme === "dark" ? "dark" : "light", false);
+
+      themeButton?.addEventListener("click", () => {
+        applyTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
+      });
+
+      systemTheme?.addEventListener?.("change", (event) => {
+        try {
+          const savedTheme = localStorage.getItem(storageKey);
+          if (savedTheme === "light" || savedTheme === "dark") return;
+        } catch {
+          // Follow the system preference if storage is unavailable.
+        }
+        applyTheme(event.matches ? "dark" : "light", false);
       });
     </script>
   </body>

@@ -1,17 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHeading from "../../components/PageHeading.astro";
-import { getPosts } from "../../lib/posts";
-import { tagPath, tagSlug } from "../../lib/site";
+import { getPosts, getTagGroups } from "../../lib/posts";
+import { tagPath } from "../../lib/site";
 
 const posts = await getPosts();
-const tags = [...new Set(posts.flatMap((post) => post.data.tags))]
-  .sort((a, b) => a.localeCompare(b))
-  .map((name) => ({
-    name,
-    slug: tagSlug(name),
-    count: posts.filter((post) => post.data.tags.includes(name)).length,
-  }));
+const tags = getTagGroups(posts);
 ---
 
 <BaseLayout title="Tags" description="Browse posts by topic.">
@@ -22,9 +16,16 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))]
         <ul class="tag-directory">
           {tags.map((tag) => (
             <li>
-              <a href={tagPath(tag.name)}>
+              <a
+                href={tagPath(tag.name)}
+                aria-label={`${tag.name}, ${tag.count} ${
+                  tag.count === 1 ? "post" : "posts"
+                }`}
+              >
                 <span>{tag.name}</span>
-                <span class="tag-count">{tag.count}</span>
+                <span class="tag-count" aria-hidden="true">
+                  {tag.count}
+                </span>
               </a>
             </li>
           ))}

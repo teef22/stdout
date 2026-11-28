@@ -1,9 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { formatDate, postPath, tagPath } from "../lib/site";
+import type { Post } from "../lib/posts";
+import { formatDate, postPath } from "../lib/site";
+import TagList from "./TagList.astro";
 
 interface Props {
-  posts: CollectionEntry<"posts">[];
+  posts: Post[];
 }
 
 const { posts } = Astro.props;
@@ -27,17 +28,7 @@ const { posts } = Astro.props;
               <a href={postPath(post.id)}>{post.data.title}</a>
             </h2>
             <p>{post.data.description}</p>
-            {post.data.tags.length > 0 && (
-              <ul class="tag-list" aria-label="Post tags">
-                {post.data.tags.map((tag) => (
-                  <li>
-                    <a class="tag" href={tagPath(tag)}>
-                      {tag}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <TagList tags={post.data.tags} />
           </div>
         </li>
       ))}

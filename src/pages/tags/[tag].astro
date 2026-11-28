@@ -1,21 +1,25 @@
 ---
-import { getPosts } from "../../lib/posts";
+import { getPosts, getTagGroups, type Post } from "../../lib/posts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHeading from "../../components/PageHeading.astro";
 import PostList from "../../components/PostList.astro";
-import { tagSlug } from "../../lib/site";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
-  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+  const tags = getTagGroups(posts);
 
   return tags.map((tag) => ({
-    params: { tag: tagSlug(tag) },
+    params: { tag: tag.slug },
     props: {
-      tag,
-      posts: posts.filter((post) => post.data.tags.includes(tag)),
+      tag: tag.name,
+      posts: tag.posts,
     },
   }));
+}
+
+interface Props {
+  tag: string;
+  posts: Post[];
 }
 
 const { tag, posts } = Astro.props;
