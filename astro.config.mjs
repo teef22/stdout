@@ -6,5 +6,10 @@ export default defineConfig({
   base: "/stdout",
   trailingSlash: "always",
   output: "static",
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.endsWith("/search/") && !page.endsWith("/404/"),
+    }),
+  ],
 });

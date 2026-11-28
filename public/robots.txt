@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://teef22.github.io/stdout/sitemap-index.xml

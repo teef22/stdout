@@ -7,24 +7,29 @@ import { sitePath } from "../lib/site";
 <BaseLayout
   title="Search"
   description="Search posts and pages on stdout."
-  searchAssets={true}
+  searchAssets
+  noindex
 >
   <section class="content-section">
     <PageHeading text="search" />
 
     <pagefind-config
-      bundle-path="/stdout/pagefind/"
-      base-url="/stdout/"
+      bundle-path={sitePath("pagefind/")}
+      base-url={sitePath("")}
     ></pagefind-config>
     <div class="search-interface">
       <div class="search-terminal">
         <pagefind-input placeholder="Search the site…"></pagefind-input>
       </div>
+      <h2 class="sr-only">Search results</h2>
       <pagefind-summary></pagefind-summary>
       <pagefind-results></pagefind-results>
     </div>
     <noscript>
-      <p class="empty-state">Search needs JavaScript. You can browse <a href={sitePath("")}>all posts</a> instead.</p>
+      <p class="empty-state">
+        Search needs JavaScript. You can browse{" "}
+        <a href={sitePath("")}>all posts</a> instead.
+      </p>
     </noscript>
   </section>
 </BaseLayout>
